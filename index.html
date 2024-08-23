@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="game-status">It's X's turn</div> <!-- Game status message -->
+    <div class="game">
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+        <button class="box"></button>
+    </div>
+    <button class="restart-button">Restart Game</button> <!-- Restart Button -->
+</body>
+<script>
+// Initialize the game board and variables
+let board = ['', '', '', '', '', '', '', '', ''];
+let currentPlayer = 'X';
+let isGameActive = true;
+
+const winningConditions = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
+
+// Function to handle a box click
+function handleBoxClick(clickedBoxIndex) {
+    if (board[clickedBoxIndex] !== '' || !isGameActive) {
+        return;
+    }
+
+    board[clickedBoxIndex] = currentPlayer;
+    document.querySelectorAll('.box')[clickedBoxIndex].innerText = currentPlayer;
+
+    if (checkWinner()) {
+        document.querySelector('.game-status').innerText = `${currentPlayer} wins!`;
+        isGameActive = false;
+    } else if (!board.includes('')) {
+        document.querySelector('.game-status').innerText = `It's a draw!`;
+        isGameActive = false;
+    } else {
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        document.querySelector('.game-status').innerText = `It's ${currentPlayer}'s turn`;
+    }
+}
+
+// Function to check for a winner
+function checkWinner() {
+    for (let i = 0; i < winningConditions.length; i++) {
+        const [a, b, c] = winningConditions[i];
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Function to restart the game
+function restartGame() {
+    board = ['', '', '', '', '', '', '', '', ''];
+    currentPlayer = 'X';
+    isGameActive = true;
+    document.querySelectorAll('.box').forEach(box => box.innerText = '');
+    document.querySelector('.game-status').innerText = `It's ${currentPlayer}'s turn`;
+}
+
+// Add event listeners to each box
+document.querySelectorAll('.box').forEach((box, index) => {
+    box.addEventListener('click', () => handleBoxClick(index));
+});
+
+// Add event listener to restart button
+document.querySelector('.restart-button').addEventListener('click', restartGame);
+</script>
+</html>
